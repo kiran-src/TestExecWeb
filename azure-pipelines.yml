@@ -1,35 +1,82 @@
-# Docker
-# Build a Docker image
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+parameters:
+  - name: repoUrl
+    type: string
+    default: 'https://github.com/QoT-Solutions/safeSpeed_BackEnd.git'
+  - name: dockerUser
+    type: string
+    default: 'kopanomgn'
+  - name: dockerPass
+    type: string
+    default: 'KopanoMagano@97'
+  - name: dockerImage
+    type: string
+    default: 'testExec'
+  - name: dockerTag
+    type: string
+    default: '1'
 
 trigger:
-- main
+  branches:
+    include:
+      - main
 
-resources:
-- repo: self
+pr:
+  branches:
+    include:
+      - main
 
-variables:
-  tag: '$(Build.BuildId)'
+pool:
+  vmImage: ubuntu-latest
 
 stages:
-- stage: Build
-  displayName: Build image
-  jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-    - task: Docker@2
-      displayName: Build an image
-      inputs:
-        command: build
-        dockerfile: '**/Dockerfile'
-        tags: |
-          $(tag)
-    - task: Docker@2
-      inputs:
-        containerRegistry: 'docker'
-        command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
-        buildContext: 'https://github.com/QoT-Solutions/safeSpeed_BackEnd.git'
+  - stage: CloneAndBuild
+    displayName: 'Clone Repository and Execute Tasks'
+    jobs:
+      - job: CloneAndExecute
+        steps:
+          - script: echo "Cloning repository from ${{ parameters.repoUrl }}"
+            displayName: 'Display Repo URL'
+          
+          - script: |
+              git clone ${{ parameters.repoUrl }} repo
+              cd repo
+              echo "Add other tasks to build, test, and deploy your project."
+              # Here you can add other git commands or any build/test/deploy scripts
+            displayName: 'Clone repository and execute tasks'
+
+  - stage: EchoStage
+    displayName: 'Additional Echo Scripts'
+    jobs:
+      - job: EchoJob
+        steps:
+          - script: echo "This is the first echo statement in the new stage."
+            displayName: 'Echo Script 1'
+
+          - script: echo "This is the second echo statement in the new stage."
+            displayName: 'Echo Script 2'
+
+  - stage: DockerBuildAndPush
+    displayName: 'Build and Push Docker Image'
+    jobs:
+      - job: DockerJob
+        steps:
+          - script: |
+              echo "Logging in to Docker Hub"
+              docker login --username ${{ parameters.dockerUser }} --password ${{ parameters.dockerPass }}
+            displayName: 'Docker Login'
+          
+          - script: |
+              echo "Building Docker image"
+              git clone ${{ parameters.repoUrl }} repo2
+              cd repo2
+              docker build -t ${{ parameters.dockerUser }}/{{ parameters.dockerImage }}:${{ parameters.dockerTag }} .
+            displayName: 'Build Docker Image'
+
+          - script: |
+              echo "Pushing Docker image to Docker Hub"
+              docker push ${{ parameters.dockerUser }}/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
+            displayName: 'Push Docker Image to Docker Hub'
+
+          - script: |
+              echo "Docker image pushed successfully."
+            displayName: 'Echo Success'
