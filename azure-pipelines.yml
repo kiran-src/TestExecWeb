@@ -27,3 +27,9 @@ stages:
         dockerfile: '**/Dockerfile'
         tags: |
           $(tag)
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'docker'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        buildContext: 'https://github.com/QoT-Solutions/safeSpeed_BackEnd.git'
