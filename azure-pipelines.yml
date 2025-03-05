@@ -43,7 +43,6 @@ stages:
               echo "Add other tasks to build, test, and deploy your project."
               # Here you can add other git commands or any build/test/deploy scripts
             displayName: 'Clone repository and execute tasks'
-
   - stage: EchoStage
     displayName: 'Additional Echo Scripts'
     jobs:
@@ -54,7 +53,6 @@ stages:
 
           - script: echo "This is the second echo statement in the new stage."
             displayName: 'Echo Script 2'
-
   - stage: DockerBuildAndPush
     displayName: 'Build and Push Docker Image'
     jobs:
