@@ -1,0 +1,15 @@
+FROM maven:3.8.5-openjdk-17
+
+# Install Chrome & ChromeDriver
+RUN apt-get update && apt-get install -y \
+    curl unzip wget xvfb chromium chromium-driver && \
+    rm -rf /var/lib/apt/lists/*
+
+# Set display for headless mode
+ENV DISPLAY=:99
+
+WORKDIR /app
+COPY . .
+
+# Run Selenium tests using Maven
+CMD ["mvn", "test"]
