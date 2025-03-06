@@ -1,15 +1,25 @@
-FROM maven:3.8.5-openjdk-17
+FROM openjdk:17-jdk-slim AS build
 
-# Install Chrome & ChromeDriver
-RUN apt-get update && apt-get install -y \
-    curl unzip wget xvfb chromium chromium-driver && \
-    rm -rf /var/lib/apt/lists/*
-
-# Set display for headless mode
-ENV DISPLAY=:99
-
+# Set the working directory
 WORKDIR /app
-COPY . .
 
-# Run Selenium tests using Maven
-CMD ["mvn", "test"]
+# Copy the Maven wrapper and pom.xml
+COPY pom.xml mvnw ./
+COPY .mvn .mvn
+
+# Make the Maven wrapper executable
+RUN chmod +x ./mvnw
+
+# Resolve dependencies
+RUN ./mvnw dependency:resolve
+
+# Copy the source code
+COPY src src
+
+# Build the application
+RUN ./mvnw package
+
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=build /app/target/*.jar demo.jar
+ENTRYPOINT ["java", "-jar", "demo.jar"]
