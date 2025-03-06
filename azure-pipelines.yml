@@ -66,7 +66,8 @@ stages:
           - script: |
               echo "Building Docker image"
               # git clone ${{ parameters.repoUrl }} repo2
-              docker build ${{ parameters.repoUrl }} -f Dockerfile.demo -t ${{ parameters.dockerUser }}/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
+              # cd repo2
+              docker build -f Dockerfile.demo ${{ parameters.repoUrl }} -t ${{ parameters.dockerUser }}/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
             displayName: 'Build Docker Image'
 
           - script: |
