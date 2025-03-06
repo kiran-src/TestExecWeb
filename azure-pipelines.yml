@@ -29,30 +29,30 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-  - stage: CloneAndBuild
-    displayName: 'Clone Repository and Execute Tasks'
-    jobs:
-      - job: CloneAndExecute
-        steps:
-          - script: echo "Cloning repository from ${{ parameters.repoUrl }}"
-            displayName: 'Display Repo URL'
+  # - stage: CloneAndBuild
+  #   displayName: 'Clone Repository and Execute Tasks'
+  #   jobs:
+  #     - job: CloneAndExecute
+  #       steps:
+  #         - script: echo "Cloning repository from ${{ parameters.repoUrl }}"
+  #           displayName: 'Display Repo URL'
           
-          - script: |
-              git clone ${{ parameters.repoUrl }} repo
-              cd repo
-              echo "Add other tasks to build, test, and deploy your project."
-              # Here you can add other git commands or any build/test/deploy scripts
-            displayName: 'Clone repository and execute tasks'
-  - stage: EchoStage
-    displayName: 'Additional Echo Scripts'
-    jobs:
-      - job: EchoJob
-        steps:
-          - script: echo "This is the first echo statement in the new stage."
-            displayName: 'Echo Script 1'
+  #         - script: |
+  #             git clone ${{ parameters.repoUrl }} repo
+  #             cd repo
+  #             echo "Add other tasks to build, test, and deploy your project."
+  #             # Here you can add other git commands or any build/test/deploy scripts
+  #           displayName: 'Clone repository and execute tasks'
+  # - stage: EchoStage
+  #   displayName: 'Additional Echo Scripts'
+  #   jobs:
+  #     - job: EchoJob
+  #       steps:
+  #         - script: echo "This is the first echo statement in the new stage."
+  #           displayName: 'Echo Script 1'
 
-          - script: echo "This is the second echo statement in the new stage."
-            displayName: 'Echo Script 2'
+  #         - script: echo "This is the second echo statement in the new stage."
+  #           displayName: 'Echo Script 2'
   - stage: DockerBuildAndPush
     displayName: 'Build and Push Docker Image'
     jobs:
@@ -65,7 +65,7 @@ stages:
           
           - script: |
               echo "Building Docker image"
-              git clone ${{ parameters.repoUrl }} repo2
+              # git clone ${{ parameters.repoUrl }} repo2
               cd repo2
               docker build ${{ parameters.repoUrl }} -f Dockerfile.demo -t ${{ parameters.dockerUser }}/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
             displayName: 'Build Docker Image'
