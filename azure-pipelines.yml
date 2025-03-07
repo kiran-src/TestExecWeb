@@ -73,7 +73,7 @@ stages:
               # cd repo2
               docker build -f Dockerfile.demo repo2 -t ${{ parameters.dockerUser }}/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
             displayName: 'Build Docker Image'
-            condition: eq(variables['testType'], 'demo')
+            condition: eq(${{ parameters.testType }}, 'demo')
           
           - script: |
               echo "Building Docker image"
