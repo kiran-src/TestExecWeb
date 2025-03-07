@@ -2,6 +2,9 @@ parameters:
   - name: repoUrl
     type: string
     default: 'https://github.com/QoT-Solutions/safeSpeed_BackEnd.git'
+  - name: testType
+    type: string
+    default: 'demo'
   - name: dockerUser
     type: string
     default: 'kopanomgn'
