@@ -56,6 +56,7 @@ stages:
 
   #         - script: echo "This is the second echo statement in the new stage."
   #           displayName: 'Echo Script 2'
+
   - stage: DockerBuildAndPush
     displayName: 'Build and Push Docker Image'
     jobs:
@@ -72,6 +73,31 @@ stages:
               # cd repo2
               docker build -f Dockerfile.demo repo2 -t ${{ parameters.dockerUser }}/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
             displayName: 'Build Docker Image'
+            condition: eq(variables['testType'], 'demo')
+          
+          - script: |
+              echo "Building Docker image"
+              git clone ${{ parameters.repoUrl }} repo2
+              # cd repo2
+              docker build -f Web/Dockerfile.web repo2 -t ${{ parameters.dockerUser }}/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
+            displayName: 'Build Docker Image'
+            condition: eq(variables['testType'], 'web')
+          
+          - script: |
+              echo "Building Docker image"
+              git clone ${{ parameters.repoUrl }} repo2
+              # cd repo2
+              docker build -f Mobile/Dockerfile.api repo2 -t ${{ parameters.dockerUser }}/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
+            displayName: 'Build Docker Image'
+            condition: eq(variables['testType'], 'api')
+          
+          - script: |
+              echo "Building Docker image"
+              git clone ${{ parameters.repoUrl }} repo2
+              # cd repo2
+              docker build -f API/Dockerfile.mob repo2 -t ${{ parameters.dockerUser }}/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
+            displayName: 'Build Docker Image'
+            condition: eq(variables['testType'], 'mob')
 
           - script: |
               echo "Pushing Docker image to Docker Hub"
