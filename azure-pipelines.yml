@@ -81,7 +81,7 @@ stages:
               # cd repo2
               docker build -f Web/Dockerfile.web repo2 -t ${{ parameters.dockerUser }}/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
             displayName: 'Build Docker Image'
-            condition: and(eq(variables['testType'], 'web'), eq(variables['testType'], 'web'))
+            condition: and(eq('${{ parameters.testType }}', 'web'), eq('${{ parameters.testType }}', 'web'))
           
           - script: |
               echo "Building Docker image"
@@ -89,7 +89,7 @@ stages:
               # cd repo2
               docker build -f Mobile/Dockerfile.api repo2 -t ${{ parameters.dockerUser }}/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
             displayName: 'Build Docker Image'
-            condition: and(eq(variables['testType'], 'api'), eq(variables['testType'], 'api'))
+            condition: and(eq('${{ parameters.testType }}', 'api'), eq('${{ parameters.testType }}', 'api'))
           
           - script: |
               echo "Building Docker image"
@@ -97,7 +97,7 @@ stages:
               # cd repo2
               docker build -f API/Dockerfile.mob repo2 -t ${{ parameters.dockerUser }}/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
             displayName: 'Build Docker Image'
-            condition: and(eq(variables['testType'], 'mob'), eq(variables['testType'], 'mob'))
+            condition: and(eq('${{ parameters.testType }}', 'mob'), eq('${{ parameters.testType }}', 'mob'))
 
           - script: |
               echo "Pushing Docker image to Docker Hub"
