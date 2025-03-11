@@ -32,30 +32,6 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-  # - stage: CloneAndBuild
-  #   displayName: 'Clone Repository and Execute Tasks'
-  #   jobs:
-  #     - job: CloneAndExecute
-  #       steps:
-  #         - script: echo "Cloning repository from ${{ parameters.repoUrl }}"
-  #           displayName: 'Display Repo URL'
-          
-  #         - script: |
-  #             git clone ${{ parameters.repoUrl }} repo
-  #             cd repo
-  #             echo "Add other tasks to build, test, and deploy your project."
-  #             # Here you can add other git commands or any build/test/deploy scripts
-  #           displayName: 'Clone repository and execute tasks'
-  # - stage: EchoStage
-  #   displayName: 'Additional Echo Scripts'
-  #   jobs:
-  #     - job: EchoJob
-  #       steps:
-  #         - script: ls -al
-  #           displayName: 'Echo Script 1'
-
-  #         - script: echo "This is the second echo statement in the new stage."
-  #           displayName: 'Echo Script 2'
 
   - stage: DockerBuildAndPush
     displayName: 'Build and Push Docker Image'
@@ -64,7 +40,7 @@ stages:
         steps:
           - script: |
               echo "Logging in to Docker Hub"
-              docker login --username ${{ parameters.dockerUser }} --password ${{ parameters.dockerPass }}
+              docker login --username $( secrets.docker_user ) --password $ (secrets.docker_password)
             displayName: 'Docker Login'
           
           - script: |
