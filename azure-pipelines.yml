@@ -5,12 +5,6 @@ parameters:
   - name: testType
     type: string
     default: 'demo'
-  - name: dockerUser
-    type: string
-    default: 'kopanomgn'
-  - name: dockerPass
-    type: string
-    default: 'KopanoMagano@97'
   - name: dockerImage
     type: string
     default: 'testexec'
@@ -47,7 +41,7 @@ stages:
               echo "Building Docker image"
               git clone ${{ parameters.repoUrl }} repo2
               # cd repo2
-              docker build -f Dockerfile.demo repo2 -t ${{ parameters.dockerUser }}/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
+              docker build -f Dockerfile.demo repo2 -t $( secrets.docker_user )/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
             displayName: 'Build Docker Image'
             condition: eq('${{ parameters.testType }}', 'demo')
           
@@ -55,7 +49,7 @@ stages:
               echo "Building Docker image"
               git clone ${{ parameters.repoUrl }} repo2
               # cd repo2
-              docker build -f Web/Dockerfile.web repo2 -t ${{ parameters.dockerUser }}/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
+              docker build -f Web/Dockerfile.web repo2 -t $( secrets.docker_user )/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
             displayName: 'Build Docker Image'
             condition: and(eq('${{ parameters.testType }}', 'web'), eq('${{ parameters.testType }}', 'web'))
           
@@ -63,7 +57,7 @@ stages:
               echo "Building Docker image"
               git clone ${{ parameters.repoUrl }} repo2
               # cd repo2
-              docker build -f Mobile/Dockerfile.api repo2 -t ${{ parameters.dockerUser }}/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
+              docker build -f Mobile/Dockerfile.api repo2 -t $( secrets.docker_user )/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
             displayName: 'Build Docker Image'
             condition: and(eq('${{ parameters.testType }}', 'api'), eq('${{ parameters.testType }}', 'api'))
           
@@ -71,13 +65,13 @@ stages:
               echo "Building Docker image"
               git clone ${{ parameters.repoUrl }} repo2
               # cd repo2
-              docker build -f API/Dockerfile.mob repo2 -t ${{ parameters.dockerUser }}/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
+              docker build -f API/Dockerfile.mob repo2 -t $( secrets.docker_user )/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
             displayName: 'Build Docker Image'
             condition: and(eq('${{ parameters.testType }}', 'mob'), eq('${{ parameters.testType }}', 'mob'))
 
           - script: |
               echo "Pushing Docker image to Docker Hub"
-              docker push ${{ parameters.dockerUser }}/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
+              docker push $( secrets.docker_user )/${{ parameters.dockerImage }}:${{ parameters.dockerTag }}
             displayName: 'Push Docker Image to Docker Hub'
 
           - script: |
